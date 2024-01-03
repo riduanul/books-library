@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+{%load crispy_forms_tags%}
+
+{% if messages %}
+
+    {% for message in messages %}
+      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
+ 
+{% endif %}
+
+    <div class=" row d-flex flex-wrap pt-5 justify-content-center align-items-center  mx-5">
+        
+        <div class="col-md-6 col-sm-12 pt-5  ">
+            <img class='' style='width:500px; height:500px' src="{{book.image.url}}" alt="">
+        </div>
+        
+        <div class="col-md-6 col-sm-12 pt-5 ">
+            <h2>Book Name: {{book.book_title}}</h2>
+            <h3>Category: {{book.category.category_name}}</h3>
+            <br>
+            <p>Description: {{book.description}}</p>
+            <h3>Price: ${{book.price}}</h3>
+            <h5>Quantity: {{book.quantity}}</h5>
+            <br>
+            {% if request.user.is_authenticated%}
+                <form method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-success" type='submit' name='borrow_post'>Borrow Book</button>
+                </form>
+            {% endif %}
+        </div>
+
+       
+    </div>
+<div class="ms-5 p-2 mt-5">
+        <div class="div">
+            <h3>Review: {{reviews | length }}</h3>
+            {% for review in reviews %}
+                <div class='d-flex gap-3'>
+                    <h5>{{review.name}}</h5>
+                <p class='text-secondary'>{{review.date}}</p>
+                </div>
+                <p>{{review.review}}</p>
+            {%endfor%}
+           </div>
+    
+           <div class="w-50">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{review_form | crispy }}
+                <button class="btn btn-success btn-sm" type='submit' name='review_post'>Submit</button>
+            </form>
+           </div>
+    </div> 
+{% endblock content %}

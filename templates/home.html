@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if messages %}
+
+    {% for message in messages %}
+      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
+ 
+{% endif %}
+    <div class="banner">
+
+        <div class="row mx-2">
+            <!-- Categories Column -->
+            <div class="col-md-2">
+                <h4 class='pb-3 mt-5'>Categories:</h4>
+                {% if categories %}
+                    {% for category in categories %}
+                        <ul class='list-unstyled'>
+                            <a href="{% url 'filter' category.slug %}" class='text-decoration-none text-dark'>
+                                <li class='fw-bold btn btn-outline-success' >{{ category }}</li>
+                            </a>
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <h2 class="text-center p-3">Out of stock</h2>
+                {% endif %}
+            </div>
+
+            <!-- Books Column -->
+            <div class="col-md-10">
+        <h1 class="text-center fw-bold p-3 ">Books Library</h1>
+
+                <div class="row">
+                    {% for book in books %}
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="card bg-secondary">
+                                <div class="card-body">
+                                    {% if book.image %}
+                                        <img
+                                            src="{{ book.image.url }}"
+                                            class="img-fluid rounded-top card-img"
+                                            alt="{{ book.book_title }}"
+                                            style="height: 180px;"
+                                        />
+                                    {% else %}
+                                        <p>No Image found</p>
+                                    {% endif %}
+                                    <h4 class="card-text">{{ book.book_title }}</h4>
+                                    <p> Description: {{book.description | truncatewords:3}}</p>
+                                    <h5 class="card-text">Price: ${{ book.price }}</h5>
+                                    <a class="text-decoration-none text-dark" href="{% url 'details' book.id %}">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
