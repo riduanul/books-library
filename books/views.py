@@ -25,14 +25,13 @@ class BookDetailsView(DetailView):
          
         review_form = ReviewForm(data=self.request.POST)
         book = self.get_object()
-
+        account = request.user.user
         existing_borrow = Borrow.objects.filter(user=request.user, book=book, is_borrow=True).first()
 
         if existing_borrow:
             messages.warning(self.request, "You have already borrowed this book.")
         elif 'borrow_post' in request.POST:
-            if book.quantity > 0:
-                account = request.user.user
+            if book.quantity > 0 and account.balance > book.price:
                 Borrow.objects.create(user=request.user, book=book, quantity=1, is_borrow= True)
                 book.quantity -= 1
                 account.balance -= book.price
@@ -41,7 +40,7 @@ class BookDetailsView(DetailView):
                 messages.success(self.request, "Book Borrowed Successfully")
                 send_transaction_email(self.request.user,"Deposit Message", book.price, 'borrow_email.html' )
             else:
-                messages.success(self.request, "Sorry, the book is out of stock.")
+                messages.success(self.request, "Sorry, the book is out of stock. or You have Insufficient Balance")
         elif 'review_post' in request.POST:
             if existing_borrow:
                 if review_form.is_valid():
@@ -49,7 +48,7 @@ class BookDetailsView(DetailView):
                     new_review.book = book
                     new_review.save()
                     return redirect('details', pk=book.pk)
-            else:
+        else:
                 messages.warning(self.request, "You can only submit a review after borrowing the book.")
 
         return self.get(request, *args, **kwargs)
