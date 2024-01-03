@@ -31,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://books-library-oqey.onrender.com/','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://books-library-ehm6.onrender.com/','https://*.127.0.0.1']
 
 
 SESSION_COOKIE_SECURE = True
@@ -139,14 +139,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
-
 # Path where media is stored
 MEDIA_ROOT = BASE_DIR / 'media'
 
